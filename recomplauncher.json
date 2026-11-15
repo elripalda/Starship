@@ -2,11 +2,37 @@
     "$schema": "https://recomplauncher.com/schema/recomplauncher.json",
     "format": 1,
     "name": "Starship",
-    "repo": "HarbourMasters/Starship",
+    "game": {
+        "kind": "iso",
+        "label": "Your Star Fox 64 US ROM (.z64), version 1.0 or 1.1.",
+        "check": {
+            "ids": [
+                "NFXE"
+            ]
+        }
+    },
     "start": {
         "program": [
-            "Starship.exe"
+            "Starship.exe",
+            "starship.appimage"
+        ],
+        "args": [
+            "--game",
+            "{game}"
         ]
+    },
+    "prepare": {
+        "program": [
+            "Starship.exe",
+            "starship.appimage"
+        ],
+        "args": [
+            "--prepare",
+            "--game",
+            "{game}"
+        ],
+        "label": "Extracting the game's assets from your ROM",
+        "timeout": 600
     },
     "config": [
         {
@@ -19,6 +45,9 @@
             ]
         }
     ],
+    "mods": {
+        "loader": "otr"
+    },
     "settings": [
         {
             "id": "window",
@@ -181,5 +210,10 @@
                 "CVars/gTextureFilter": "0"
             }
         }
+    ],
+    "requires": [
+        "start",
+        "settings.json",
+        "settings.choices"
     ]
 }
