@@ -9,6 +9,9 @@
 #include "portable-file-dialogs.h"
 #endif
 
+// Set by --game <path>: the player's ROM, used instead of the file picker.
+std::string gGameArgPath;
+
 std::unordered_map<std::string, std::string> mGameList = {
     { "d8b1088520f7c5f81433292a9258c1184afa1457", "Star Fox 64 (U) (V1.0)" },
     { "63b69f0ef36306257481afc250f9bc304c7162b2", "Star Fox 64 (U) (V1.0) (Uncompressed)" },
@@ -24,6 +27,14 @@ std::unordered_map<std::string, std::string> mGameList = {
 };
 
 bool GameExtractor::SelectGameFromUI() {
+    if (!gGameArgPath.empty()) {
+        this->mGamePath = gGameArgPath;
+        std::ifstream argFile(this->mGamePath, std::ios::binary);
+        this->mGameData = std::vector<uint8_t>(std::istreambuf_iterator<char>(argFile), {});
+        argFile.close();
+        return !this->mGameData.empty();
+    }
+
 #if !defined(__IOS__) && !defined(__ANDROID__) && !defined(__SWITCH__)
     auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64" }).result();
 
